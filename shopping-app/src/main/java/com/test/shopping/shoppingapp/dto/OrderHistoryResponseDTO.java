@@ -5,17 +5,17 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
 
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 
-import javax.persistence.OneToMany;
+import jakarta.persistence.OneToMany;
 
-import javax.persistence.Table;
+import jakarta.persistence.Table;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 public class OrderHistoryResponseDTO implements Serializable {
 

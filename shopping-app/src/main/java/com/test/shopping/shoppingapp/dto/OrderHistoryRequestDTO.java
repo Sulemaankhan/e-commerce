@@ -1,6 +1,6 @@
 package com.test.shopping.shoppingapp.dto;
 
-import javax.persistence.JoinColumn;
+import jakarta.persistence.JoinColumn;
 
 import com.test.shopping.shoppingapp.entity.User;
 

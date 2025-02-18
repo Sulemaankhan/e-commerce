@@ -1,6 +1,6 @@
 package com.test.shopping.shoppingapp.service;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import com.test.shopping.shoppingapp.dto.BuyProductRequest;
 
