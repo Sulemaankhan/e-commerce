@@ -9,11 +9,11 @@
 		<version>3.2.11</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.test.ecommgateway</groupId>
-	<artifactId>ecommerce-api-gateway</artifactId>
+	<groupId>com.test.apigateway</groupId>
+	<artifactId>api-gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ecommerce-api-gateway</name>
-	<description>Ecommerce Api Gateway project for Spring Boot</description>
+	<name>api-gateway</name>
+	<description>Api Gateway project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2023.0.1</spring-cloud.version>
