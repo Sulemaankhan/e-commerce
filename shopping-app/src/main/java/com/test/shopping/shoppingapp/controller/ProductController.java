@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,8 +19,9 @@ import com.test.shopping.shoppingapp.dto.ProductResponseDTO;
 import com.test.shopping.shoppingapp.service.ProductService;
 
 @RestController
-@RequestMapping("products")
+//@RequestMapping("products")
 @Validated
+@CrossOrigin
 public class ProductController {
 
 	@Autowired
@@ -30,7 +32,12 @@ public class ProductController {
 	public ResponseEntity<List<ProductResponseDTO>> search(@RequestParam String productName,
 			@RequestParam String categoryName) {
 		List<ProductResponseDTO> productResponseDTO = productSearchService.searchProduct(productName, categoryName);
-
+		return new ResponseEntity<List<ProductResponseDTO>>(productResponseDTO, HttpStatus.OK);
+	}
+	@GetMapping(value = "/products")
+	@Valid
+	public ResponseEntity<List<ProductResponseDTO>> getAll() {
+		List<ProductResponseDTO> productResponseDTO = productSearchService.getAll();
 		return new ResponseEntity<List<ProductResponseDTO>>(productResponseDTO, HttpStatus.OK);
 	}
 

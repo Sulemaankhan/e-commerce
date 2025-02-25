@@ -18,6 +18,7 @@ public class ProductResponseDTO implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private long id;
 
 	private String productName;
 
@@ -58,5 +59,14 @@ public class ProductResponseDTO implements Serializable {
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+	
 
 }

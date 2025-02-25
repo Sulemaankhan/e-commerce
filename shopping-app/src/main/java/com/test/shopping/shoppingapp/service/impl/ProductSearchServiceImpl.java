@@ -50,4 +50,20 @@ public class ProductSearchServiceImpl implements ProductService {
 		return list.stream().map(productList -> modelMapper.map(productList, ProductResponseDTO.class))
 				.collect(Collectors.toList());
 	}
+
+	@Override
+	public List<ProductResponseDTO> getAll() {
+		// using ModelMapper with stream api
+				List<Product> list = productRepository.findAll();
+
+				// Object utlis
+				if (ObjectUtils.isEmpty(list)) {
+					// if list obj is empty then return product not found
+					throw new ProductNotFoundException("No such Category is available ");
+				}
+				System.out.println("===Return list of the product====");
+				return list.stream().map(productList -> modelMapper.map(productList, ProductResponseDTO.class))
+						.collect(Collectors.toList());
+
+	}
 }

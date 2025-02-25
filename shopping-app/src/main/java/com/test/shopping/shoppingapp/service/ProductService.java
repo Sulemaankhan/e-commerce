@@ -12,4 +12,6 @@ public interface ProductService {
 
 	List<ProductResponseDTO> searchProduct(String productName, String productCategory);
 
+	List<ProductResponseDTO> getAll();
+
 }

@@ -19,7 +19,7 @@ spring:
           #http://localhost:1020/
         predicates:
         - Path=/bank-service/**
-      - id: ecommerce
+      - id: shopping
         uri: lb://shopping-service
           #http://localhost:1010/
         predicates:
