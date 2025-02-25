@@ -10,7 +10,7 @@ eureka:
   
 spring:
   application:
-    name: ecommerce-api-gatway
+    name: api-gateway
   cloud:
     gateway:
       routes:
