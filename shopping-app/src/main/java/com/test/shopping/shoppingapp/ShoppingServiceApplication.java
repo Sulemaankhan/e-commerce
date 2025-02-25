@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 @EnableFeignClients
 @EnableDiscoveryClient
-public class ShoppingAppApplication {
+public class ShoppingServiceApplication {
 
 	@Bean
 	public ModelMapper modelMapper() {
@@ -18,7 +18,7 @@ public class ShoppingAppApplication {
 	}
 	
 	public static void main(String[] args) {
-		SpringApplication.run(ShoppingAppApplication.class, args);
+		SpringApplication.run(ShoppingServiceApplication.class, args);
 	}
 
 }
