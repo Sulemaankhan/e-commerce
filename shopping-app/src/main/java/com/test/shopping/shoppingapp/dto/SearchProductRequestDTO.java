@@ -1,9 +1,9 @@
 package com.test.shopping.shoppingapp.dto;
 
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 
 import com.test.shopping.shoppingapp.entity.ProductCategory;
 

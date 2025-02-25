@@ -2,8 +2,8 @@ package com.test.shopping.shoppingapp.dto;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public class ProductRequestDTO implements Serializable{
 	/**

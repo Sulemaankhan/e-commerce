@@ -1,6 +1,6 @@
 package com.test.shopping.shoppingapp.dto;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 public class AccountResponseDTO {
 

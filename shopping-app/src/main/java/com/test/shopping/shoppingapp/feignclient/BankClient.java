@@ -2,7 +2,7 @@ package com.test.shopping.shoppingapp.feignclient;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

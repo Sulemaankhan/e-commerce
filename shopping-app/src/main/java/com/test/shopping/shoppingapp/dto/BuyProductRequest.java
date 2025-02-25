@@ -3,7 +3,7 @@ package com.test.shopping.shoppingapp.dto;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

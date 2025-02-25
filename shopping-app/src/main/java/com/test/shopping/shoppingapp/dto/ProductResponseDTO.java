@@ -2,13 +2,13 @@ package com.test.shopping.shoppingapp.dto;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 
 import com.test.shopping.shoppingapp.entity.ProductCategory;
 
