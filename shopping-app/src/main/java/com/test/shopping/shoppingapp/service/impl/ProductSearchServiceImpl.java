@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.devtools.autoconfigure.DevToolsProperties.Restart;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -16,6 +17,7 @@ import org.springframework.util.ObjectUtils;
 import com.test.shopping.shoppingapp.customexception.OrderNotAvailable;
 import com.test.shopping.shoppingapp.customexception.ProductNotFoundException;
 import com.test.shopping.shoppingapp.dto.OrderHistoryResponseDTO;
+import com.test.shopping.shoppingapp.dto.ProductRequestDTO;
 import com.test.shopping.shoppingapp.dto.ProductResponseDTO;
 import com.test.shopping.shoppingapp.dto.SearchCategoryRequestDTO;
 import com.test.shopping.shoppingapp.dto.SearchProductRequestDTO;
@@ -54,16 +56,34 @@ public class ProductSearchServiceImpl implements ProductService {
 	@Override
 	public List<ProductResponseDTO> getAll() {
 		// using ModelMapper with stream api
-				List<Product> list = productRepository.findAll();
+		List<Product> list = productRepository.findAll();
 
-				// Object utlis
-				if (ObjectUtils.isEmpty(list)) {
-					// if list obj is empty then return product not found
-					throw new ProductNotFoundException("No such Category is available ");
-				}
-				System.out.println("===Return list of the product====");
-				return list.stream().map(productList -> modelMapper.map(productList, ProductResponseDTO.class))
-						.collect(Collectors.toList());
+		// Object utlis
+		if (ObjectUtils.isEmpty(list)) {
+			// if list obj is empty then return product not found
+			throw new ProductNotFoundException("No such Category is available ");
+		}
+		System.out.println("===Return list of the product====");
+		return list.stream().map(productList -> modelMapper.map(productList, ProductResponseDTO.class))
+				.collect(Collectors.toList());
 
+	}
+
+	@Override
+	public String saveProduct(ProductRequestDTO productRequest) {
+		String result = "";
+		Product pd = new Product();
+		pd.setProductName(productRequest.getProductName());
+		pd.setCategoryName(productRequest.getProductCategory());
+		pd.setDescription(productRequest.getDescription());
+		pd.setPrice(productRequest.getPrice());
+		Product res = productRepository.save(pd);
+		if (!ObjectUtils.isEmpty(res)) {
+			result = "Successfully save";
+		} else {
+			result = "Insertion failed";
+		}
+		System.out.println("Product save api result :"+result);
+		return result;
 	}
 }

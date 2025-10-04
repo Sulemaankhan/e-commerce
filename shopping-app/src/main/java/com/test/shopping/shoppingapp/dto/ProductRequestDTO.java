@@ -14,6 +14,12 @@ public class ProductRequestDTO implements Serializable{
 	private String productName;
 	@NotNull(message = "productCategory name is required")
 	private String productCategory;
+	
+	@NotNull(message = "price should not be empity")
+	private double price;
+
+	@NotNull(message = "description name should not be null")
+	private String description = "abc";
 
 	public String getProductName() {
 		return productName;
@@ -30,5 +36,24 @@ public class ProductRequestDTO implements Serializable{
 	public void setProductCategory(String productCategory) {
 		this.productCategory = productCategory;
 	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	
+	
 
 }

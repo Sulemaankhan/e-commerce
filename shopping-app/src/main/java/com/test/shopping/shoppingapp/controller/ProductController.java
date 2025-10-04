@@ -10,11 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.test.shopping.shoppingapp.dto.ProductRequestDTO;
 import com.test.shopping.shoppingapp.dto.ProductResponseDTO;
 import com.test.shopping.shoppingapp.service.ProductService;
 
@@ -39,6 +41,13 @@ public class ProductController {
 	public ResponseEntity<List<ProductResponseDTO>> getAll() {
 		List<ProductResponseDTO> productResponseDTO = productSearchService.getAll();
 		return new ResponseEntity<List<ProductResponseDTO>>(productResponseDTO, HttpStatus.OK);
+	}
+	@PostMapping(value = "/products")
+	@Valid
+	public ResponseEntity<String> saveProduct(@RequestBody ProductRequestDTO productRequest) {
+		String productResponseDTO = productSearchService.saveProduct(productRequest);
+		System.out.println("Api::/products::POST");
+		return new ResponseEntity<String>(productResponseDTO, HttpStatus.OK);
 	}
 
 //	@PostMapping("search")

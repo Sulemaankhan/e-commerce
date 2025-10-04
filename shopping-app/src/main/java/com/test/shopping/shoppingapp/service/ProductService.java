@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import com.test.shopping.shoppingapp.dto.OrderHistoryResponseDTO;
+import com.test.shopping.shoppingapp.dto.ProductRequestDTO;
 import com.test.shopping.shoppingapp.dto.ProductResponseDTO;
 
 public interface ProductService {
@@ -13,5 +14,7 @@ public interface ProductService {
 	List<ProductResponseDTO> searchProduct(String productName, String productCategory);
 
 	List<ProductResponseDTO> getAll();
+
+	String saveProduct(ProductRequestDTO productRequest);
 
 }
