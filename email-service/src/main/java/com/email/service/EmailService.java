@@ -1,11 +1,11 @@
 package com.email.service;
 
-import com.email.dto.EmailDetails;
+import com.email.dto.NotificationDto;
 
 public interface EmailService {
 
-	public String sendSimpleMail(EmailDetails details);
+	public String sendSimpleMail(NotificationDto details);
 
-	public String sendMailWithAttachment(EmailDetails details);
+	///public String sendMailWithAttachment(EmailNotificationDto details);
 
 }

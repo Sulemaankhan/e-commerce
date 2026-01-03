@@ -10,7 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.email.dto.EmailDetails;
+import com.email.dto.NotificationDto;
 import com.email.service.EmailService;
 
 import jakarta.mail.MessagingException;
@@ -27,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
 
 	// Method 1
 	// To send a simple email
-	public String sendSimpleMail(EmailDetails details) {
+	public String sendSimpleMail(NotificationDto details) {
 
 		// Try block to check for exceptions
 		try {
@@ -54,39 +54,39 @@ public class EmailServiceImpl implements EmailService {
 		}
 	}
 
-	// Method 2
-	// To send an email with attachment
-	public String sendMailWithAttachment(EmailDetails details) {
-		// Creating a mime message
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-		MimeMessageHelper mimeMessageHelper;
-
-		try {
-
-			// Setting multipart as true for attachments to
-			// be send
-			mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-			mimeMessageHelper.setFrom(sender);
-			mimeMessageHelper.setTo(details.getRecipient());
-			mimeMessageHelper.setText(details.getMsgBody());
-			mimeMessageHelper.setSubject(details.getSubject());
-
-			// Adding the attachment
-			FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
-
-			mimeMessageHelper.addAttachment(file.getFilename(), file);
-
-			// Sending the mail
-			javaMailSender.send(mimeMessage);
-			return "Mail sent Successfully";
-		}
-
-		// Catch block to handle MessagingException
-		catch (MessagingException me) {
-			// Display message when exception occurred
-			return "Error while sending mail!!!" + me;
-		} catch (Exception e) {
-			return "Error while sending mail!!!" + e;
-		}
-	}
+//	// Method 2
+//	// To send an email with attachment
+//	public String sendMailWithAttachment(EmailNotificationDto details) {
+//		// Creating a mime message
+//		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//		MimeMessageHelper mimeMessageHelper;
+//
+//		try {
+//
+//			// Setting multipart as true for attachments to
+//			// be send
+//			mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+//			mimeMessageHelper.setFrom(sender);
+//			mimeMessageHelper.setTo(details.getRecipient());
+//			mimeMessageHelper.setText(details.getMsgBody());
+//			mimeMessageHelper.setSubject(details.getSubject());
+//
+//			// Adding the attachment
+//			FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
+//
+//			mimeMessageHelper.addAttachment(file.getFilename(), file);
+//
+//			// Sending the mail
+//			javaMailSender.send(mimeMessage);
+//			return "Mail sent Successfully";
+//		}
+//
+//		// Catch block to handle MessagingException
+//		catch (MessagingException me) {
+//			// Display message when exception occurred
+//			return "Error while sending mail!!!" + me;
+//		} catch (Exception e) {
+//			return "Error while sending mail!!!" + e;
+//		}
+//	}
 }

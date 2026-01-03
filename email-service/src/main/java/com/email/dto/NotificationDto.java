@@ -6,13 +6,15 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 
 import jakarta.mail.internet.InternetAddress;
 
-public class EmailDetails {
+public class NotificationDto {
 	
 	 // Class data members
     private String recipient;
     private String msgBody;
     private String subject;
-    private String attachment;
+    private String number;
+    
+    
 	public String getRecipient() {
 		return recipient;
 	}
@@ -31,16 +33,17 @@ public class EmailDetails {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-	public String getAttachment() {
-		return attachment;
+	
+	public String getNumber() {
+		return number;
 	}
-	public void setAttachment(String attachment) {
-		this.attachment = attachment;
+	public void setNumber(String number) {
+		this.number = number;
 	}
 	@Override
 	public String toString() {
-		return "EmailDto [recipient=" + recipient + ", msgBody=" + msgBody + ", subject=" + subject + ", attachment="
-				+ attachment + "]";
+		return "EmailNotificationDto [recipient=" + recipient + ", msgBody=" + msgBody + ", subject=" + subject
+				+ ", number=" + number + "]";
 	}
     
     
