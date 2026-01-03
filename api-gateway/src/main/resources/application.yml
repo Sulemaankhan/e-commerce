@@ -1,26 +1,30 @@
 server:
   port: 7777
-  
+
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka
   instance:
     prefer-ip-address: true
-  
+
 spring:
   application:
     name: api-gateway
   cloud:
     gateway:
       routes:
-      - id: bank
-        uri: lb://bank-service
-          #http://localhost:1020/
-        predicates:
-        - Path=/bank-service/**
-      - id: shopping
-        uri: lb://shopping-service
-          #http://localhost:1010/
-        predicates:
-        - Path=/shopping-service/**
+        - id: bank
+          uri: lb://bank-service
+          predicates:
+            - Path=/bank-service/**
+            
+        - id: shopping
+          uri: lb://shopping-service
+          predicates:
+            - Path=/shopping-service/**
+
+        - id: email
+          uri: lb://email-service
+          predicates:
+            - Path=/email-service/**
