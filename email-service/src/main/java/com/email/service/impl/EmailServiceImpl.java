@@ -37,18 +37,20 @@ public class EmailServiceImpl implements EmailService {
 
 			// Setting up necessary details
 			mailMessage.setFrom(sender);
+			System.out.println("Sender :" + sender);
 			mailMessage.setTo(details.getRecipient());
 			mailMessage.setText(details.getMsgBody());
 			mailMessage.setSubject(details.getSubject());
 
 			// Sending the mail
 			javaMailSender.send(mailMessage);
-			return "Mail Sent Successfully to..."+details.getRecipient();
+			return "Mail Sent Successfully to..." + details.getRecipient();
 		}
 
 		// Catch block to handle the exceptions
 		catch (Exception e) {
-			return "Error while Sending Mail";
+			e.getStackTrace();
+			return e.getMessage();
 		}
 	}
 
@@ -80,10 +82,11 @@ public class EmailServiceImpl implements EmailService {
 		}
 
 		// Catch block to handle MessagingException
-		catch (MessagingException e) {
-
+		catch (MessagingException me) {
 			// Display message when exception occurred
-			return "Error while sending mail!!!";
+			return "Error while sending mail!!!" + me;
+		} catch (Exception e) {
+			return "Error while sending mail!!!" + e;
 		}
 	}
 }
