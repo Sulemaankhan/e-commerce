@@ -9,16 +9,17 @@ import com.test.bank.dao.AccountDao;
 import com.test.bank.dto.AccountRequestDTO;
 import com.test.bank.dto.AccountResponseDTO;
 import com.test.bank.entity.Account;
-import com.test.bank.service.AccountService;
+import com.test.bank.service.GlobalPayment;
+import com.test.bank.service.PaymentStrategy;
 
 @Service
-public class AccountServiceImpl implements AccountService {
+public class AccountServiceImpl implements GlobalPayment {
 
 	@Autowired
 	private AccountDao accountDao;
 
 	@Override
-	public AccountResponseDTO payment(long accountNumber) {
+	public AccountResponseDTO globalPayment(long accountNumber) {
 		AccountResponseDTO accountResponseDTO = new AccountResponseDTO();
 
 	//	String status = "success";

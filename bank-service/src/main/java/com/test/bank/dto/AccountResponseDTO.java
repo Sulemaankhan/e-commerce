@@ -1,11 +1,20 @@
 package com.test.bank.dto;
 
-import jakarta.validation.constraints.NotEmpty;
+import java.io.Serializable;
 
-public class AccountResponseDTO {
+public class AccountResponseDTO implements Serializable{
 
 	private long accountNumber;
 	private long balance;
+	private String type;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	public AccountResponseDTO() {
 		// TODO Auto-generated constructor stub

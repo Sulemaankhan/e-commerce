@@ -18,18 +18,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.test.bank.dto.AccountRequestDTO;
 import com.test.bank.dto.AccountResponseDTO;
-import com.test.bank.service.AccountService;
+import com.test.bank.service.GlobalPayment;
+import com.test.bank.service.PaymentStrategy;
+import com.test.bank.service.strategy.UtilityStrategyService;
 
 @RestController
 @RequestMapping("accounts")
 public class AccountController {
 
 	Logger logger = LoggerFactory.getLogger(AccountController.class);
+	//private final PaymentStrategy accountService;
+	private final GlobalPayment globalPayment;
+	private final UtilityStrategyService utilityStrategyService;
+	private final Environment environment;
+	
+	
 
-	@Autowired
-	private AccountService accountService;
-	@Autowired
-	Environment environment;
+	public AccountController(GlobalPayment globalPayment,
+			UtilityStrategyService utilityStrategyService, Environment environment) {
+		super();
+		//this.accountService = accountService;
+		this.globalPayment = globalPayment;
+		this.utilityStrategyService = utilityStrategyService;
+		this.environment = environment;
+	}
 
 	@GetMapping("port")
 	public String getInfo() {
@@ -38,14 +50,33 @@ public class AccountController {
 		return "From server " + port;
 	}
 
-	@PostMapping("payment")
-	public ResponseEntity<AccountResponseDTO> payment(@Valid @RequestParam long accountNumber) {
+	@PostMapping("global/payment")
+	public ResponseEntity<AccountResponseDTO> globalPayment(@PathVariable String type,
+			@Valid @RequestParam long accountNumber) {
 		logger.info("Bank Service is calling");
 		AccountRequestDTO accountRequestDTO = new AccountRequestDTO();
 		accountRequestDTO.setAccountNumber(101);
 		// accountRequestDTO.setBankName("sbi");
-		AccountResponseDTO accountResponseDTO = accountService.payment(accountNumber);
+		AccountResponseDTO accountResponseDTO = globalPayment.globalPayment(accountNumber);
 		// String status = accountService.payment(accountNumber);
+		return new ResponseEntity<AccountResponseDTO>(accountResponseDTO, HttpStatus.OK);
+	}
+
+	@PostMapping("payment")
+	public ResponseEntity<AccountResponseDTO> payment(@PathVariable String mode,
+			@Valid @RequestParam long accountNumber) {
+		
+		logger.info("Bank Service is calling");
+		AccountRequestDTO accountRequestDTO = new AccountRequestDTO();
+		accountRequestDTO.setAccountNumber(101);
+		
+		//find the payment mode
+		PaymentStrategy paymentMode =utilityStrategyService.getPaymentMode(mode);
+		
+		//call payment service impl
+		AccountResponseDTO accountResponseDTO = paymentMode.payment(accountNumber);
+		//set payment mode
+		accountResponseDTO.setType(mode);
 		return new ResponseEntity<AccountResponseDTO>(accountResponseDTO, HttpStatus.OK);
 	}
 }
