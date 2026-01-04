@@ -14,9 +14,13 @@ import com.email.service.Notification;
 @Primary
 public class Email implements Notification{
 	
-	@Autowired
-	private JavaMailSender javaMailSender;
 	
+	private final JavaMailSender javaMailSender;
+	
+	public Email(JavaMailSender javaMailSender) {
+		this.javaMailSender = javaMailSender;
+	}
+
 	@Value("${spring.mail.username}")
 	private String sender;
 

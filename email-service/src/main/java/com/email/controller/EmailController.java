@@ -14,17 +14,20 @@ import com.email.service.EmailService;
 import com.email.service.Notification;
 import com.email.service.impl.NotificationFactory;
 
+import lombok.AllArgsConstructor;
+
 @RestController
 @RequestMapping("/emails")
+@AllArgsConstructor
 public class EmailController {
 
 	private final EmailService emailService;
 	private final NotificationFactory notificationFactory;
 
-	public EmailController(EmailService emailService,NotificationFactory notificationFactory) {
-		this.notificationFactory = notificationFactory;
-		this.emailService=emailService;
-	}
+//	public EmailController(EmailService emailService,NotificationFactory notificationFactory) {
+//		this.notificationFactory = notificationFactory;
+//		this.emailService=emailService;
+//	}
 
 	// Sending a simple Email
 	@PostMapping("/sendMail")
