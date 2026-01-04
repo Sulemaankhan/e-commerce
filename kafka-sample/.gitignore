@@ -9,6 +9,7 @@
 .*.md.html
 .DS_Store
 .attach_pid*
+template.log
 .classpath
 .factorypath
 .gradle
