@@ -29,20 +29,28 @@ import com.test.shopping.shoppingapp.repo.ProductRepository;
 import com.test.shopping.shoppingapp.repo.UserRepository;
 import com.test.shopping.shoppingapp.service.BuyProductService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @Service
 public class PurchaseOrderImpl implements BuyProductService {
-	@Autowired
-	OrdersRepository orderRepo;
 
-	@Autowired
-	ProductRepository productRepo;
+	private final OrdersRepository orderRepo;
+	private final ProductRepository productRepo;
+	private final UserRepository userRepository;
+	private final BankClient bankClient;
 
-	@Autowired
-	UserRepository userRepository;
+	public PurchaseOrderImpl(OrdersRepository orderRepo, ProductRepository productRepo, UserRepository userRepository,
+			BankClient bankClient) {
+		super();
+		this.orderRepo = orderRepo;
+		this.productRepo = productRepo;
+		this.userRepository = userRepository;
+		this.bankClient = bankClient;
+	}
 
-	@Autowired
-	BankClient bankClient;
+	private static final String SERVICE_NAME = "payment-service";
 
+	@CircuitBreaker(name = SERVICE_NAME, fallbackMethod = "fallbackMethod")
 	public String orderProducts(@Valid BuyProductRequest orderRequestDTO)
 			throws ProductNotFoundException, InsufficientBalance, UserNotFoundException {
 		double totalamount = 0;
@@ -61,7 +69,7 @@ public class PurchaseOrderImpl implements BuyProductService {
 			if (totalamount < accountResponseDTO.getBalance()) {
 				order.setTotalPrice(totalamount);
 				order.setOrderDetails(orderDetailsList);
-				Orders savedOrder = orderRepo.save(order);
+				orderRepo.save(order);
 				return "Order Success";
 			} else {
 				throw new InsufficientBalance("InsufficientBalance......." + accountResponseDTO.getBalance());
@@ -115,5 +123,9 @@ public class PurchaseOrderImpl implements BuyProductService {
 			orderDetailsDTOs.add(orderDetailsDTO);
 		});
 		return "sucess";
+	}
+
+	public String fallbackForOrder(Long accountNumber, Throwable t) {
+		return "Payment Service is currently unavailable. Please try again later. Reason: " + t.getMessage();
 	}
 }
