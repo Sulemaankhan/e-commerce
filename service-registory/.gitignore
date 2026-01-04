@@ -12,6 +12,7 @@
 .classpath
 .factorypath
 .gradle
+template.log
 .metadata
 .project
 .recommenders
