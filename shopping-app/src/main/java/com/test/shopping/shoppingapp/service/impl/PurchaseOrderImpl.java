@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
 
 import com.test.shopping.shoppingapp.customexception.InsufficientBalance;
@@ -30,6 +31,8 @@ import com.test.shopping.shoppingapp.repo.UserRepository;
 import com.test.shopping.shoppingapp.service.BuyProductService;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 
 @Service
 public class PurchaseOrderImpl implements BuyProductService {
@@ -37,6 +40,7 @@ public class PurchaseOrderImpl implements BuyProductService {
 	private final OrdersRepository orderRepo;
 	private final ProductRepository productRepo;
 	private final UserRepository userRepository;
+	@LoadBalanced
 	private final BankClient bankClient;
 
 	public PurchaseOrderImpl(OrdersRepository orderRepo, ProductRepository productRepo, UserRepository userRepository,
@@ -48,9 +52,11 @@ public class PurchaseOrderImpl implements BuyProductService {
 		this.bankClient = bankClient;
 	}
 
-	private static final String SERVICE_NAME = "payment-service";
+	//private static final String SERVICE_NAME = "payment-service";
 
-	@CircuitBreaker(name = SERVICE_NAME, fallbackMethod = "fallbackMethod")
+	@Retry(name = "order-service", fallbackMethod = "fallback")
+    @CircuitBreaker(name = "order-service", fallbackMethod = "fallback")
+    @RateLimiter(name = "order-service", fallbackMethod = "rateLimitFallback")
 	public String orderProducts(@Valid BuyProductRequest orderRequestDTO)
 			throws ProductNotFoundException, InsufficientBalance, UserNotFoundException {
 		double totalamount = 0;
@@ -128,4 +134,8 @@ public class PurchaseOrderImpl implements BuyProductService {
 	public String fallbackForOrder(Long accountNumber, Throwable t) {
 		return "Payment Service is currently unavailable. Please try again later. Reason: " + t.getMessage();
 	}
+	// Specific Fallback for Rate Limiting (Optional)
+    public String rateLimitFallback(Long accountNumber, io.github.resilience4j.ratelimiter.RequestNotPermitted e) {
+        return "Too many requests! Please wait and try again.";
+    }
 }
