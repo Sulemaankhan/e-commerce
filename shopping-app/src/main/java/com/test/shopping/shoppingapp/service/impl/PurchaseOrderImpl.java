@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
 
 import com.test.shopping.shoppingapp.customexception.InsufficientBalance;
@@ -29,20 +30,33 @@ import com.test.shopping.shoppingapp.repo.ProductRepository;
 import com.test.shopping.shoppingapp.repo.UserRepository;
 import com.test.shopping.shoppingapp.service.BuyProductService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
+
 @Service
 public class PurchaseOrderImpl implements BuyProductService {
-	@Autowired
-	OrdersRepository orderRepo;
 
-	@Autowired
-	ProductRepository productRepo;
+	private final OrdersRepository orderRepo;
+	private final ProductRepository productRepo;
+	private final UserRepository userRepository;
+	@LoadBalanced
+	private final BankClient bankClient;
 
-	@Autowired
-	UserRepository userRepository;
+	public PurchaseOrderImpl(OrdersRepository orderRepo, ProductRepository productRepo, UserRepository userRepository,
+			BankClient bankClient) {
+		super();
+		this.orderRepo = orderRepo;
+		this.productRepo = productRepo;
+		this.userRepository = userRepository;
+		this.bankClient = bankClient;
+	}
 
-	@Autowired
-	BankClient bankClient;
+	//private static final String SERVICE_NAME = "payment-service";
 
+	@Retry(name = "order-service", fallbackMethod = "fallback")
+    @CircuitBreaker(name = "order-service", fallbackMethod = "fallback")
+    @RateLimiter(name = "order-service", fallbackMethod = "rateLimitFallback")
 	public String orderProducts(@Valid BuyProductRequest orderRequestDTO)
 			throws ProductNotFoundException, InsufficientBalance, UserNotFoundException {
 		double totalamount = 0;
@@ -61,7 +75,7 @@ public class PurchaseOrderImpl implements BuyProductService {
 			if (totalamount < accountResponseDTO.getBalance()) {
 				order.setTotalPrice(totalamount);
 				order.setOrderDetails(orderDetailsList);
-				Orders savedOrder = orderRepo.save(order);
+				orderRepo.save(order);
 				return "Order Success";
 			} else {
 				throw new InsufficientBalance("InsufficientBalance......." + accountResponseDTO.getBalance());
@@ -116,4 +130,12 @@ public class PurchaseOrderImpl implements BuyProductService {
 		});
 		return "sucess";
 	}
+
+	public String fallbackForOrder(Long accountNumber, Throwable t) {
+		return "Payment Service is currently unavailable. Please try again later. Reason: " + t.getMessage();
+	}
+	// Specific Fallback for Rate Limiting (Optional)
+    public String rateLimitFallback(Long accountNumber, io.github.resilience4j.ratelimiter.RequestNotPermitted e) {
+        return "Too many requests! Please wait and try again.";
+    }
 }

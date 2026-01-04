@@ -6,6 +6,7 @@
 *.sw?
 *~
 .#*
+template.log
 .*.md.html
 .DS_Store
 .attach_pid*

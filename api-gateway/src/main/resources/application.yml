@@ -15,7 +15,7 @@ spring:
     gateway:
       routes:
         - id: bank
-          uri: lb://bank-service
+          uri: lb://payment-service
           predicates:
             - Path=/bank-service/**
             

@@ -15,7 +15,7 @@ import com.test.shopping.shoppingapp.dto.AccountResponseDTO;
 
 
 
-@FeignClient(name = "http://Bank-SERVICE/bankapp/accounts")
+@FeignClient(name = "http://Payment-SERVICE/bankapp/accounts")
 public interface BankClient {
 
 	@GetMapping("port")
