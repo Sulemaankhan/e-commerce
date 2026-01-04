@@ -13,6 +13,7 @@
 .factorypath
 .gradle
 .metadata
+template.log
 .project
 .recommenders
 .settings
