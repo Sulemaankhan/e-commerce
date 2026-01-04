@@ -32,6 +32,7 @@ dump.rdb
 interpolated*.xml
 lib/
 manifest.yml
+template.log
 out
 overridedb.*
 target
