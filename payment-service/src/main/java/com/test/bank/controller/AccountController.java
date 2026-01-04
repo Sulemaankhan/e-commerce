@@ -1,6 +1,8 @@
 package com.test.bank.controller;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +26,10 @@ import com.test.bank.service.strategy.UtilityStrategyService;
 
 @RestController
 @RequestMapping("accounts")
+@AllArgsConstructor
+@Slf4j
 public class AccountController {
 
-	Logger logger = LoggerFactory.getLogger(AccountController.class);
 	//private final PaymentStrategy accountService;
 	private final GlobalPayment globalPayment;
 	private final UtilityStrategyService utilityStrategyService;
@@ -34,18 +37,18 @@ public class AccountController {
 	
 	
 
-	public AccountController(GlobalPayment globalPayment,
-			UtilityStrategyService utilityStrategyService, Environment environment) {
-		super();
-		//this.accountService = accountService;
-		this.globalPayment = globalPayment;
-		this.utilityStrategyService = utilityStrategyService;
-		this.environment = environment;
-	}
+//	public AccountController(GlobalPayment globalPayment,
+//			UtilityStrategyService utilityStrategyService, Environment environment) {
+//		super();
+//		//this.accountService = accountService;
+//		this.globalPayment = globalPayment;
+//		this.utilityStrategyService = utilityStrategyService;
+//		this.environment = environment;
+//	}
 
 	@GetMapping("port")
 	public String getInfo() {
-		logger.info("checking load balance");
+		log.info("checking load balance");
 		String port = environment.getProperty("local.server.port");
 		return "From server " + port;
 	}
@@ -53,7 +56,7 @@ public class AccountController {
 	@PostMapping("global/payment")
 	public ResponseEntity<AccountResponseDTO> globalPayment(@PathVariable String type,
 			@Valid @RequestParam long accountNumber) {
-		logger.info("Bank Service is calling");
+		log.info("Bank Service is calling");
 		AccountRequestDTO accountRequestDTO = new AccountRequestDTO();
 		accountRequestDTO.setAccountNumber(101);
 		// accountRequestDTO.setBankName("sbi");
@@ -66,7 +69,7 @@ public class AccountController {
 	public ResponseEntity<AccountResponseDTO> payment(@PathVariable String mode,
 			@Valid @RequestParam long accountNumber) {
 		
-		logger.info("Bank Service is calling");
+		log.info("Bank Service is calling");
 		AccountRequestDTO accountRequestDTO = new AccountRequestDTO();
 		accountRequestDTO.setAccountNumber(101);
 		

@@ -16,7 +16,7 @@ public class UtilityStrategyService {
 	}
 
 	public PaymentStrategy getPaymentMode(String mode) {
-		PaymentStrategy strategy = strategies.get(mode);
+		PaymentStrategy strategy = strategies.get(mode.toUpperCase());
 		if (strategy == null) {
 			throw new IllegalArgumentException("Unknown payment type: " + mode);
 		}

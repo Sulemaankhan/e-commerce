@@ -10,11 +10,13 @@ import com.test.bank.dto.AccountResponseDTO;
 import com.test.bank.entity.Account;
 import com.test.bank.service.PaymentStrategy;
 
+import lombok.AllArgsConstructor;
+
 @Component("UPI")
+@AllArgsConstructor
 public class UPIServiceImpl implements PaymentStrategy{
 	
-	@Autowired
-	private AccountDao accountDao;
+	private final AccountDao accountDao;
 
 	@Override
 	public AccountResponseDTO payment(long accountNumber) {

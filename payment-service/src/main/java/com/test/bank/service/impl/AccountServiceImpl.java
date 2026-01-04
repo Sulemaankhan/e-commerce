@@ -12,11 +12,14 @@ import com.test.bank.entity.Account;
 import com.test.bank.service.GlobalPayment;
 import com.test.bank.service.PaymentStrategy;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class AccountServiceImpl implements GlobalPayment {
 
-	@Autowired
-	private AccountDao accountDao;
+	
+	private final AccountDao accountDao;
 
 	@Override
 	public AccountResponseDTO globalPayment(long accountNumber) {
