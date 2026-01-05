@@ -11,13 +11,12 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.email.dto.NotificationDto;
-import com.email.service.EmailService;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
-public class EmailServiceImpl implements EmailService {
+public class EmailServiceImpl{
 
 	private final JavaMailSender javaMailSender;
 
