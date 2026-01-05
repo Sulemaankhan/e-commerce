@@ -14,14 +14,14 @@ public class NotificationService {
 		this.factory = factory;
 	}
 
-	public String send(String typeKey, String recipient,String message, String subject) {
-		//return runtime factory method
+	public String send(String typeKey, String recipient, String message, String subject) {
+		// return runtime factory method
 		Notification notification = factory.getNotification(typeKey);
-		//called Impl obj based on the type
-		return notification.notifyUser(recipient,message, subject);
+		// called Impl obj based on the type
+		return notification.notifyUser(recipient, message, subject);
 	}
 
-//	public String send(NotificationType type, String message, String subject, String recipient) {
-//		return send(type.key(), message, subject, recipient);
-//	}
+	public String send(NotificationType type, String recipient, String message, String subject) {
+		return send(type.key(), recipient, message, subject);
+	}
 }
