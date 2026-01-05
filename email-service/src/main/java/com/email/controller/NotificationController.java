@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/notify")
 @AllArgsConstructor
-public class EmailController {
+public class NotificationController {
 
 	private final NotificationService notificationService;
 
