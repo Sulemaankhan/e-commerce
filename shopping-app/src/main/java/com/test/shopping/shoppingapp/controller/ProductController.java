@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,9 +20,8 @@ import com.test.shopping.shoppingapp.dto.ProductResponseDTO;
 import com.test.shopping.shoppingapp.service.ProductService;
 
 @RestController
-//@RequestMapping("products")
 @Validated
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:3000", "http://127.0.0.1:3000"}, allowCredentials = "true", allowedHeaders = "*", maxAge = 3600)
 public class ProductController {
 
 	@Autowired
@@ -42,22 +40,22 @@ public class ProductController {
 		List<ProductResponseDTO> productResponseDTO = productSearchService.getAll();
 		return new ResponseEntity<List<ProductResponseDTO>>(productResponseDTO, HttpStatus.OK);
 	}
-	@PostMapping(value = "/products")
-	@Valid
+	@PostMapping(value ="/products")
 	public ResponseEntity<String> saveProduct(@RequestBody ProductRequestDTO productRequest) {
+		System.out.println("Entered::/products::POST");
 		String productResponseDTO = productSearchService.saveProduct(productRequest);
 		System.out.println("Api::/products::POST");
 		return new ResponseEntity<String>(productResponseDTO, HttpStatus.OK);
 	}
-
-//	@PostMapping("search")
-//	public ResponseEntity<ProductCategoryResponseDTO> search(
-//			@Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
-//		ProductCategoryResponseDTO productResponseDTO = productSearchService
-//				.search(categoryRequestDTO.getCategoryName(), categoryRequestDTO.getProductName());
-//
-//		return new ResponseEntity<ProductCategoryResponseDTO>(productResponseDTO, HttpStatus.OK);
-//
-//	}
-
+	@GetMapping(value = "/products/page")
+	public com.test.shopping.shoppingapp.dto.PagedResponseDTO<com.test.shopping.shoppingapp.dto.ProductResDTO> getProductsPaged(
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "20") int size,
+			@RequestParam(name = "search", required = false) String search,
+			@RequestParam(name = "category", required = false) String category,
+			@RequestParam(name = "sortBy", defaultValue = "id") String sortBy,
+			@RequestParam(name = "sortDir", defaultValue = "asc") String sortDir) {
+			System.out.println("========pagination grid called====");
+		return productSearchService.getProductsPage(page, size, search, category, sortBy, sortDir);
+	}
 }

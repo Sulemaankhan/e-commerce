@@ -25,15 +25,17 @@ public class Product implements Serializable {
 	private Long id;
 
 	private String productName;
-
-	@NotNull(message = "price should not be empity")
-	private double price;
+	
+	@NotNull(message = "Required")
+	private String categoryName;
 
 	@NotNull(message = "description name should not be null")
 	private String description = "abc";
 
-	@NotNull(message = "Required")
-	private String categoryName;
+	@NotNull(message = "price should not be empity")
+	private double price;
+	
+	
 
 //	@ManyToOne(cascade = CascadeType.ALL)
 //	@JoinColumn(name = "category_id")

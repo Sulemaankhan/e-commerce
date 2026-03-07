@@ -13,18 +13,21 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      routes:
-        - id: bank
-          uri: lb://payment-service
-          predicates:
-            - Path=/bank-service/**
-            
-        - id: shopping
-          uri: lb://shopping-service
-          predicates:
-            - Path=/shopping-service/**
+      server:
+        webflux:
+          routes:
+            - id: bank
+              uri: lb://payment-service
+              predicates:
+                - Path=/bank-service/**
 
-        - id: email
-          uri: lb://email-service
-          predicates:
-            - Path=/email-service/**
+            # Forwards full path + query (e.g. /shopping-service/products/page?page=0&size=12) to shopping-service
+            - id: shopping
+              uri: lb://shopping-service
+              predicates:
+                - Path=/shopping-service/**
+
+            - id: email
+              uri: lb://email-service
+              predicates:
+                - Path=/email-service/**

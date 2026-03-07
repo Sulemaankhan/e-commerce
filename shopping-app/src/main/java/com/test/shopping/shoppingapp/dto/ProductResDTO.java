@@ -1,24 +1,14 @@
 package com.test.shopping.shoppingapp.dto;
 
-import java.io.Serializable;
+public class ProductResDTO {
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-
-public class ProductRequestDTO implements Serializable{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
 	private Long id ;
 	private String productName;
-	@JsonAlias("productCategory")
 	private String categoryName;
 	private String description;
 	private double price;
 	
-	public ProductRequestDTO() {
+	public ProductResDTO() {
 		// TODO Auto-generated constructor stub
 	}
 	public Long getId() {
@@ -51,7 +41,7 @@ public class ProductRequestDTO implements Serializable{
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	public ProductRequestDTO(Long id, String productName, String categoryName, String description, double price) {
+	public ProductResDTO(Long id, String productName, String categoryName, String description, double price) {
 		super();
 		this.id = id;
 		this.productName = productName;
@@ -65,5 +55,7 @@ public class ProductRequestDTO implements Serializable{
 				+ ", description=" + description + ", price=" + price + "]";
 	}
 	
-
+	
+	
+	
 }
