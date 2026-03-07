@@ -6,6 +6,6 @@ import com.test.shopping.shoppingapp.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	User findByUserNameAndPassword(String userName, String password);
+	java.util.Optional<User> findByUserName(String userName);
 
 }

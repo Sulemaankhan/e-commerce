@@ -1,20 +1,25 @@
 package com.test.shopping.shoppingapp.dto;
 
-import jakarta.validation.constraints.NotEmpty;
-
 public class UserLoginResponseDTO {
 
-	@NotEmpty(message = "username is required")
-	private String userName;
-	@NotEmpty(message = "password is required")
-	private String message = "user successfull login";
+	private String token;
+	private UserResponse user;
+	private String message = "Login successful";
 
-	public String getUserName() {
-		return userName;
+	public String getToken() {
+		return token;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public UserResponse getUser() {
+		return user;
+	}
+
+	public void setUser(UserResponse user) {
+		this.user = user;
 	}
 
 	public String getMessage() {
@@ -25,4 +30,24 @@ public class UserLoginResponseDTO {
 		this.message = message;
 	}
 
+	public static class UserResponse {
+		private Long id;
+		private String userName;
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public String getUserName() {
+			return userName;
+		}
+
+		public void setUserName(String userName) {
+			this.userName = userName;
+		}
+	}
 }

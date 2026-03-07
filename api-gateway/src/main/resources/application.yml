@@ -1,6 +1,11 @@
 server:
   port: 7777
 
+# JWT secret (must match shopping-service app.jwt.secret)
+app:
+  jwt:
+    secret: your-256-bit-secret-key-for-jwt-signing-must-be-long-enough
+
 eureka:
   client:
     serviceUrl:
@@ -13,21 +18,19 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      server:
-        webflux:
-          routes:
-            - id: bank
-              uri: lb://payment-service
-              predicates:
-                - Path=/bank-service/**
+      # CORS is added only in CorsGlobalFilter (beforeCommit). No globalcors here to avoid duplicate headers.
+      routes:
+        - id: bank
+          uri: lb://payment-service
+          predicates:
+            - Path=/bank-service/**
 
-            # Forwards full path + query (e.g. /shopping-service/products/page?page=0&size=12) to shopping-service
-            - id: shopping
-              uri: lb://shopping-service
-              predicates:
-                - Path=/shopping-service/**
+        - id: shopping
+          uri: lb://shopping-service
+          predicates:
+            - Path=/shopping-service/**
 
-            - id: email
-              uri: lb://email-service
-              predicates:
-                - Path=/email-service/**
+        - id: email
+          uri: lb://email-service
+          predicates:
+            - Path=/email-service/**
