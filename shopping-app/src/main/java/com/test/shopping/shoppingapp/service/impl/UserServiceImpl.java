@@ -1,6 +1,7 @@
 package com.test.shopping.shoppingapp.service.impl;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,14 @@ public class UserServiceImpl implements UserService {
 			throw new IllegalArgumentException("Username already exists");
 		}
 		User user = new User();
+		// Manually assign ID to avoid relying on DB auto-increment for existing schema.
+		 // Create a Random object
+        Random rand = new Random();
+        // Generate a random number between 1000 (inclusive) and 10000 (exclusive)
+        int min = 1000;
+        int max = 9999;
+        int randomNum = rand.nextInt(max - min + 1) + min;
+		user.setId(Long.valueOf(randomNum));
 		user.setUserName(request.getUserName());
 		user.setPassword(passwordEncoder.encode(request.getPassword()));
 		user.setFirstName(request.getFirstName());
