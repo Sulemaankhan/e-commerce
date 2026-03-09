@@ -9,4 +9,6 @@ public interface UserService {
 
 	UserLoginResponseDTO register(UserRegisterRequestDTO request);
 
+	boolean isAdmin(Long userId);
+
 }

@@ -1,40 +1,74 @@
 package com.test.apigateway.filter;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
 import reactor.core.publisher.Mono;
 
 /**
- * Adds CORS headers to every response right before commit so they are never
- * overwritten by the proxied backend. Fixes ERR_NETWORK after login when loading products.
+ * Global CORS for Spring Cloud Gateway. Allows any origin (any http/https, host, port)
+ * by default. Set cors.allow-all=false and cors.allowed-origins=... to restrict.
+ * Handles OPTIONS preflight at the gateway so backends do not need to.
  */
 @Component
 public class CorsGlobalFilter implements org.springframework.cloud.gateway.filter.GlobalFilter, Ordered {
 
-	private static final List<String> ALLOWED_ORIGINS = List.of("http://localhost:3000", "http://127.0.0.1:3000");
+	@Value("${cors.allow-all:true}")
+	private boolean allowAllOrigins;
+
+	@Value("${cors.allowed-origins:}")
+	private String allowedOriginsConfig;
+
+	private static final List<String> ALL_METHODS = List.of(
+			"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD");
+
+	private boolean isOriginAllowed(String origin) {
+		if (origin == null || origin.isEmpty()) return false;
+		if (allowAllOrigins) return true;
+		if (allowedOriginsConfig != null && !allowedOriginsConfig.isBlank()) {
+			List<String> allowed = Arrays.stream(allowedOriginsConfig.split(","))
+					.map(String::trim)
+					.collect(Collectors.toList());
+			return allowed.contains("*") || allowed.contains(origin);
+		}
+		return true;
+	}
+
+	private void addCorsHeaders(ServerWebExchange exchange) {
+		HttpHeaders headers = exchange.getResponse().getHeaders();
+		String origin = exchange.getRequest().getHeaders().getFirst(HttpHeaders.ORIGIN);
+		if (origin != null && isOriginAllowed(origin)) {
+			headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+		}
+		headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, String.join(", ", ALL_METHODS));
+		headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*");
+		headers.set(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "*");
+		headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+		headers.set(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "86400");
+	}
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, org.springframework.cloud.gateway.filter.GatewayFilterChain chain) {
 		exchange.getResponse().beforeCommit(() -> {
-			HttpHeaders headers = exchange.getResponse().getHeaders();
-			// Set (overwrite) so we always have exactly one CORS set even after proxy
-			String origin = exchange.getRequest().getHeaders().getFirst(HttpHeaders.ORIGIN);
-			if (origin != null && ALLOWED_ORIGINS.contains(origin)) {
-				headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
-			} else {
-				headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, ALLOWED_ORIGINS.get(0));
-			}
-			headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, PUT, DELETE, OPTIONS, PATCH");
-			headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*");
-			headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-			headers.set(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "3600");
+			addCorsHeaders(exchange);
 			return Mono.empty();
 		});
+
+		// Handle preflight OPTIONS at gateway so backend is not called
+		if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) {
+			exchange.getResponse().setStatusCode(HttpStatus.OK);
+			return exchange.getResponse().setComplete();
+		}
+
 		return chain.filter(exchange);
 	}
 

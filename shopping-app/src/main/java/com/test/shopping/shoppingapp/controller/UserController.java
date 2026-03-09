@@ -2,6 +2,7 @@ package com.test.shopping.shoppingapp.controller;
 
 import jakarta.validation.Valid;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import com.test.shopping.shoppingapp.service.UserService;
 
 @RestController
 @RequestMapping("/users")
-@Validated
 public class UserController {
 	@Autowired
 	private UserService userService;
@@ -32,6 +32,9 @@ public class UserController {
 		logger.info("UserController login()");
 		UserLoginResponseDTO userResponseDTO = userService.loginUser(userLoginRequestDTO.getUserName(),
 				userLoginRequestDTO.getPassword());
+		if(ObjectUtils.isNotEmpty(userResponseDTO) && userLoginRequestDTO.getUserName()!=null) {
+			logger.info("User Login success.......");
+		}
 		return ResponseEntity.ok(userResponseDTO);
 	}
 

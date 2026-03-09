@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,13 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.test.shopping.shoppingapp.dto.ProductRequestDTO;
 import com.test.shopping.shoppingapp.dto.ProductResponseDTO;
 import com.test.shopping.shoppingapp.service.ProductService;
+import com.test.shopping.shoppingapp.service.UserService;
 
 @RestController
-@Validated
 public class ProductController {
 
 	@Autowired
 	private ProductService productSearchService;
+
+	@Autowired
+	private UserService userService;
 
 	@GetMapping
 	@Valid
@@ -39,8 +43,12 @@ public class ProductController {
 		return new ResponseEntity<List<ProductResponseDTO>>(productResponseDTO, HttpStatus.OK);
 	}
 	@PostMapping(value ="/products")
-	public ResponseEntity<String> saveProduct(@RequestBody ProductRequestDTO productRequest) {
+	public ResponseEntity<String> saveProduct(@RequestBody ProductRequestDTO productRequest,
+											  @org.springframework.web.bind.annotation.RequestHeader(value = "X-User-Id", required = false) Long userId) {
 		System.out.println("Entered::/products::POST");
+		if (userId == null || !userService.isAdmin(userId)) {
+			return new ResponseEntity<>("Only ADMIN users can create or update products.", HttpStatus.FORBIDDEN);
+		}
 		String productResponseDTO = productSearchService.saveProduct(productRequest);
 		System.out.println("Api::/products::POST");
 		return new ResponseEntity<String>(productResponseDTO, HttpStatus.OK);

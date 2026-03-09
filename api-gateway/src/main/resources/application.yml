@@ -1,6 +1,11 @@
 server:
   port: 7777
 
+# CORS: allow any origin by default (any http/https, host, port). To restrict, set allow-all: false and list origins.
+# cors:
+#   allow-all: true
+#   allowed-origins: http://localhost:3000,https://myapp.example.com
+
 # JWT secret (must match shopping-service app.jwt.secret)
 app:
   jwt:

@@ -19,13 +19,14 @@ public class JwtUtil {
 	@Value("${app.jwt.expiration-ms:86400000}")
 	private long expirationMs;
 
-	public String generateToken(Long userId, String userName) {
+	public String generateToken(Long userId, String userName, String role) {
 		Date now = new Date();
 		Date expiry = new Date(now.getTime() + expirationMs);
 		SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(java.nio.charset.StandardCharsets.UTF_8));
 		return Jwts.builder()
 				.subject(userName)
 				.claim("userId", userId)
+				.claim("role", role)
 				.issuedAt(now)
 				.expiration(expiry)
 				.signWith(key)

@@ -2,11 +2,13 @@ package com.test.apigateway.filter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -25,9 +27,11 @@ public class JwtAuthGatewayFilter implements org.springframework.cloud.gateway.f
 			"/shopping-service/users/login",
 			"/shopping-service/users/register",
 			"/actuator/",
-			"/shopping-service/products",
 			"/eureka/"
 	);
+	/** Path that is public only for GET (read); POST/PUT/DELETE require JWT so backend gets X-Username, X-User-Id. */
+	private static final String PRODUCTS_PATH_PREFIX = "/shopping-service/products";
+	private static final Set<HttpMethod> PUBLIC_METHODS = Set.of(HttpMethod.GET, HttpMethod.OPTIONS, HttpMethod.HEAD);
 
 	@Value("${app.jwt.secret:your-256-bit-secret-key-for-jwt-signing-must-be-long-enough}")
 	private String secret;
@@ -40,6 +44,10 @@ public class JwtAuthGatewayFilter implements org.springframework.cloud.gateway.f
 		}
 		String path = exchange.getRequest().getPath().value();
 		if (PUBLIC_PATH_PREFIXES.stream().anyMatch(p -> path.equals(p) || path.startsWith(p))) {
+			return chain.filter(exchange);
+		}
+		// Products: allow GET/OPTIONS/HEAD without auth; require JWT for POST/PUT/DELETE/PATCH so backend gets user headers
+		if (path.startsWith(PRODUCTS_PATH_PREFIX) && PUBLIC_METHODS.contains(exchange.getRequest().getMethod())) {
 			return chain.filter(exchange);
 		}
 		String auth = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
@@ -56,10 +64,12 @@ public class JwtAuthGatewayFilter implements org.springframework.cloud.gateway.f
 					.getPayload();
 			String username = claims.getSubject();
 			Object userId = claims.get("userId");
+			Object role = claims.get("role");
 			ServerWebExchange modified = exchange.mutate()
 					.request(r -> r.headers(h -> {
 						if (username != null) h.set("X-Username", username);
 						if (userId != null) h.set("X-User-Id", String.valueOf(userId));
+						if (role != null) h.set("X-User-Role", String.valueOf(role));
 					}))
 					.build();
 			return chain.filter(modified);

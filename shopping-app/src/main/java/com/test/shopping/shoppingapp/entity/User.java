@@ -38,6 +38,21 @@ public class User implements Serializable {
 	@NotNull(message = "password should not be empty")
 	private String password;
 
+	@NotEmpty(message = "first name is required")
+	private String firstName;
+
+	@NotEmpty(message = "last name is required")
+	private String lastName;
+
+	@NotEmpty(message = "emailId is required")
+	private String emailId;
+
+	@NotEmpty(message = "mobileNumber is required")
+	private String mobileNumber;
+
+	@NotNull(message = "role should not be empty")
+	private String role = "USER";
+
 	@OneToMany(mappedBy = "user")
 	private List<Orders> orderList;
 
@@ -63,6 +78,46 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public List<Orders> getOrderList() {
