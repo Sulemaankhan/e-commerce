@@ -1,0 +1,28 @@
+server:
+  port: 1313
+
+spring:
+  application:
+    name: notification-system
+
+  kafka:
+    bootstrap-servers: ${app.kafka.bootstrap-servers:localhost:9092}
+
+  mail:
+    host: localhost
+    port: 25
+    # Configure real SMTP creds when you plug in a real mail server.
+    username: ""
+    password: ""
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+app:
+  kafka:
+    bootstrap-servers: localhost:9092
+    notification-topic: notifications
+
